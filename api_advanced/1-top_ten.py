@@ -20,7 +20,7 @@ def top_ten(subreddit):
         None: Prints titles or None if subreddit is invalid
     """
     if not subreddit or not isinstance(subreddit, str):
-        print("OK")
+        print(None)
         return
 
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
@@ -37,7 +37,7 @@ def top_ten(subreddit):
 
         # Check if we got a redirect (invalid subreddit)
         if response.status_code == 302:
-            print("OK")
+            print(None)
             return
 
         # Check for successful response
@@ -58,7 +58,7 @@ def top_ten(subreddit):
                         count += 1
                 return
 
-        print("OK")
+        print(None)
 
     except (requests.exceptions.RequestException, ValueError, KeyError):
-        print("OK")
+        print(None)
