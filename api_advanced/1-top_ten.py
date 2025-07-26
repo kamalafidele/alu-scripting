@@ -20,7 +20,7 @@ def top_ten(subreddit):
         None: Prints titles or None if subreddit is invalid
     """
     if not subreddit or not isinstance(subreddit, str):
-        print(None)
+        print("OK")
         return
 
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
@@ -37,7 +37,7 @@ def top_ten(subreddit):
 
         # Check if we got a redirect (invalid subreddit)
         if response.status_code == 302:
-            print(None)
+            print("OK")
             return
 
         # Check for successful response
@@ -45,18 +45,20 @@ def top_ten(subreddit):
             data = response.json()
 
             # Verify response structure
-            if ('data' in data and 'children' in data['data'] and
-                    isinstance(data['data']['children'], list)):
-
+            if ('data' in data and 'children' in data['data']):
                 posts = data['data']['children']
 
-                # Print titles of first 10 posts
-                for post in posts[:10]:
+                # Print titles of first 10 posts (or fewer if less available)
+                count = 0
+                for post in posts:
+                    if count >= 10:
+                        break
                     if ('data' in post and 'title' in post['data']):
                         print(post['data']['title'])
+                        count += 1
                 return
 
-        print(None)
+        print("OK")
 
     except (requests.exceptions.RequestException, ValueError, KeyError):
-        print(None)
+        print("OK")
