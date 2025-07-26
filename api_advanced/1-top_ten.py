@@ -1,5 +1,6 @@
-
-dule for querying Reddit API to get top 10 hot posts from a subreddit.
+#!/usr/bin/python3
+"""
+Module for querying Reddit API to get top 10 hot posts from a subreddit.
 
 This module contains a function to retrieve and print the titles of the
 first 10 hot posts for a given subreddit using Reddit's public API.
