@@ -23,7 +23,7 @@ def top_ten(subreddit):
         print(None)
         return
 
-    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
 
     # Custom User-Agent to avoid Too Many Requests errors
     headers = {
@@ -35,30 +35,25 @@ def top_ten(subreddit):
         response = requests.get(url, headers=headers, allow_redirects=False,
                                 params={'limit': 10})
 
-        # Check if we got a redirect (invalid subreddit)
-        if response.status_code == 302:
+        # Check for invalid subreddit (404 or other error codes)
+        if response.status_code != 200:
             print(None)
             return
 
-        # Check for successful response
-        if response.status_code == 200:
-            data = response.json()
+        # Parse JSON response
+        data = response.json()
 
-            # Verify response structure
-            if ('data' in data and 'children' in data['data']):
-                posts = data['data']['children']
+        # Verify response structure
+        posts = data.get('data', {}).get('children', [])
+        if not posts:
+            print(None)
+            return
 
-                # Print titles of first 10 posts (or fewer if less available)
-                count = 0
-                for post in posts:
-                    if count >= 10:
-                        break
-                    if ('data' in post and 'title' in post['data']):
-                        print(post['data']['title'])
-                        count += 1
-                return
+        # Print titles of first 10 posts
+        for post in posts:
+            title = post.get('data', {}).get('title')
+            if title:
+                print(title)
 
-        print(None)
-
-    except (requests.exceptions.RequestException, ValueError, KeyError):
+    except requests.exceptions.RequestException:
         print(None)
