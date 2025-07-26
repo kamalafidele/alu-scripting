@@ -24,32 +24,25 @@ def top_ten(subreddit):
         return
 
     url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-
-    # Custom User-Agent to avoid Too Many Requests errors
     headers = {
         'User-Agent': 'python:subreddit.hot.posts:v1.0 (by /u/bot)'
     }
 
     try:
-        # Make request without following redirects
-        response = requests.get(url, headers=headers, allow_redirects=False,
-                                params={'limit': 10})
+        response = requests.get(
+            url, headers=headers, allow_redirects=False, params={'limit': 10}
+        )
 
-        # Check for invalid subreddit (404 or other error codes)
         if response.status_code != 200:
             print(None)
             return
 
-        # Parse JSON response
         data = response.json()
-
-        # Verify response structure
         posts = data.get('data', {}).get('children', [])
         if not posts:
             print(None)
             return
 
-        # Print titles of first 10 posts
         for post in posts:
             title = post.get('data', {}).get('title')
             if title:
@@ -57,3 +50,4 @@ def top_ten(subreddit):
 
     except requests.exceptions.RequestException:
         print(None)
+
